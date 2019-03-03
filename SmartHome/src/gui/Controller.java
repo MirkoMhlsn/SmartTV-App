@@ -276,6 +276,7 @@ public class Controller implements Initializable {
 			prevKacheln[1] = index;
 			index = index - 3 - dif;
 			dif = 0;
+			//scrollPane.setHvalue(index * 1.0/(arbeiter.kachelAnzahl - arbeiter.kachelSichtbar));
 			smoothScroll(index * 1.0/(arbeiter.kachelAnzahl - arbeiter.kachelSichtbar));
 		}
 		
@@ -313,6 +314,8 @@ public class Controller implements Initializable {
 			timer.setUpTimer();
 			
 		}
+		
+		//case index: (0)start YT usw...
 		
 	}
 	
