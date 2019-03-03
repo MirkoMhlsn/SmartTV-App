@@ -1,0 +1,80 @@
+.root{
+	-fx-background-color: #1c1f23;
+}
+.tab-pane{
+	-fx-tab-max-height: 0;
+	-fx-background-color: #24262e;
+}
+.tab-pane .tab-header-area{
+	visibility: hidden;
+}
+.scroll-pane{
+	-fx-padding: 0;
+	-fx-background: #1c1f23;
+}
+.button{
+	-fx-background-radius: 0, 0, 0, 0;
+	-fx-opacity: 0.9;
+	-fx-background-insets: 0, 0, 0, 0;
+}
+.button:focused{
+	/*enable the following line for screens with a resolution of 1929x1080 (FullHD)*/
+	/*-fx-background-insets: -15 -15 -30 -15, 0, 0, 0, -3 -3 -3 -3, 0, 0, 0;*/
+	
+	/*enable the following line for screens with a resolution of 1280x720*/
+	-fx-background-insets: -10 -10 -20 -10, 0, 0, 0, -3 -3 -3 -3, 0, 0, 0;
+	-fx-background-color: #24262e, #000000, #ffffff, #ffffff, #0093ff, #000000, #000000, #ffffff;
+	-fx-opacity: 1.0;
+	/*-fx-padding: 0.166667em;*/
+}
+.pane{
+	-fx-padding: 0;
+}
+.label{
+	-fx-text-fill: #e8e8e8;
+	-fx-font-size: 30pt;
+}
+#numberPadButton{
+	-fx-font-size: 10pt;
+	-fx-background-radius: 0, 0, 0, 0;
+	-fx-opacity: 1.0;
+	-fx-background-color: #ffffff;
+	-fx-background-insets: 0, 0, 0, 0;
+}
+#numberPadButton:focused{
+	-fx-background-insets: 0, 0, 0, 2;
+	-fx-background-color: #0093ff, #0093ff, #0093ff, #ffffff;
+}
+#numberPadButton:armed{
+	-fx-background-color: #0093ff;
+}
+#numberPadButton:disabled{
+	-fx-opacity: 0.8;
+}
+#zeit{
+	-fx-font-size: 90pt;
+}
+#timerStartStop{
+	-fx-background-color: ffffff;
+}
+#timerStartStop:focused{
+	-fx-background-insets: 0, 0, 0, 2;
+	-fx-background-color: #0093ff, #ffffff, #0093ff, #ffffff;
+}
+#timerStartStop:armed{
+	-fx-background-color: #0093ff;
+}
+#timerStartStop:disabled{
+	-fx-opacity: 0.6;
+	-fx-background-color: #b0b0b0; 
+}
+#windowsButton{
+	-fx-font-size: 15pt;
+}
+#windowsButton:focused{
+	-fx-background-insets: 0, 0, 0, 2;
+	-fx-background-color: #0093ff, #0093ff, #0093ff, #ffffff;
+}
+#windowsButton:armed{
+	-fx-background-color: #0093ff;
+}
