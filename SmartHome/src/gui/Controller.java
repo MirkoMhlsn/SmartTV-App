@@ -131,13 +131,14 @@ public class Controller implements Initializable {
 		
 		scrollPane.prefHeightProperty().bind(vBox.heightProperty());
 		scrollPane.prefWidthProperty().bind(vBox.widthProperty());
-		scrollPane.setMaxHeight(arbeiter.kachelDimension + 40);
+		scrollPane.setMaxHeight(arbeiter.kachelDimension*4.0/15.0 + arbeiter.kachelDimension);
 		
 		hBox.prefHeightProperty().bind(scrollPane.heightProperty());
-		hBox.setPrefWidth((arbeiter.kachelDimension + 20) * arbeiter.kachelAnzahl);
+		hBox.setPrefWidth((arbeiter.kachelDimension*2.0/15.0 + arbeiter.kachelDimension) * arbeiter.kachelAnzahl);
 		hBox.getChildren().addAll(apps);
 		hBox.setPadding(new Insets(arbeiter.hBoxInset, arbeiter.hBoxInset / 2.0, arbeiter.hBoxInset, arbeiter.hBoxInset / 2.0));
 		hBox.setSpacing(arbeiter.hBoxInset);
+		hBox.setId("appContainer");
 		
 	}
 	
@@ -276,7 +277,7 @@ public class Controller implements Initializable {
 			prevKacheln[1] = index;
 			index = index - 3 - dif;
 			dif = 0;
-			//scrollPane.setHvalue(index * 1.0/(arbeiter.kachelAnzahl - arbeiter.kachelSichtbar));
+//			scrollPane.setHvalue(index * 1.0/(arbeiter.kachelAnzahl - arbeiter.kachelSichtbar));
 			smoothScroll(index * 1.0/(arbeiter.kachelAnzahl - arbeiter.kachelSichtbar));
 		}
 		
@@ -314,8 +315,6 @@ public class Controller implements Initializable {
 			timer.setUpTimer();
 			
 		}
-		
-		//case index: (0)start YT usw...
 		
 	}
 	
