@@ -1,7 +1,5 @@
 package apps;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.util.ArrayList;
 
 import javafx.concurrent.ScheduledService;
@@ -51,10 +49,10 @@ public class Stoppuhr {
 	EventHandler<KeyEvent> getTabToFocus;
 	ArrayList<EventHandler<ActionEvent>> numberPadAction = new ArrayList<EventHandler<ActionEvent>>();
 	
-	Image backspace = new Image("file:src\\icons\\back_space_50x50.png");
-	Image cross = new Image("file:src\\icons\\cancel_50x50.png");
-	Image play = new Image("file:src\\icons\\play_timer_2.png");
-	Image pause = new Image("file:src\\icons\\pause_timer.png");
+	Image backspace = new Image("file:src/icons/back_space_50x50.png");
+	Image cross = new Image("file:src/icons/cancel_50x50.png");
+	Image play = new Image("file:src/icons/play_timer_2.png");
+	Image pause = new Image("file:src/icons/pause_timer.png");
 	ImageView buttonImages[] = {new ImageView(play), new ImageView(pause)};
 	String buttonMessages[] = {"Start", "Stop"};
 	int buttonImageIndex = 0;
@@ -288,7 +286,6 @@ public class Stoppuhr {
 			
 			int index = i;
 			
-			System.err.println(numberPadAction.size());
 			numberPadAction.add(new EventHandler<ActionEvent>() {
 
 				@Override
@@ -314,28 +311,22 @@ public class Stoppuhr {
 			
 		}
 		
-		for(int i = 0; i < tilePane.getPrefColumns(); i++) {
-			
-			getTabToFocus = new EventHandler<KeyEvent>() {
+		getTabToFocus = new EventHandler<KeyEvent>() {
 
-				@Override
-				public void handle(KeyEvent event) {
+			@Override
+			public void handle(KeyEvent event) {
+				
+				if(event.getCode() == KeyCode.UP) {
 					
-					if(event.getCode() == KeyCode.UP) {
-						
-						tab.getTabPane().requestFocus();
-						try {
-							Robot robot = new Robot();
-							robot.keyPress(java.awt.event.KeyEvent.VK_UP);
-						} catch (AWTException e) {
-							e.printStackTrace();
-						}
-						
-					}
+					tab.getTabPane().requestFocus();
 					
 				}
 				
-			};
+			}
+			
+		};
+		
+		for(int i = 0; i < tilePane.getPrefColumns(); i++) {
 			
 			numberPad[i].addEventHandler(KeyEvent.KEY_PRESSED, getTabToFocus);
 			
@@ -443,7 +434,6 @@ public class Stoppuhr {
 			
 		}
 		
-		System.out.println(numberPadAction.size());
 		for(int i = 0; i < numberPadAction.size(); i++) {
 			
 			numberPad[i].setDisable(true);

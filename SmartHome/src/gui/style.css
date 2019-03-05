@@ -23,14 +23,19 @@
 }
 .button:focused{
 	/*enable the following line for screens with a resolution of 1280x720*/
-	/*-fx-background-insets: -10 -10 -20 -10, 0, 0, 0, -3 -3 -3 -3, 0, 0, 0;*/
+	-fx-background-insets: -10 -10 -20 -10, 0, 0, 0, -3 -3 -3 -3, 0, 0, 0;
 	
 	/*enable the following line for screens with a resolution of 1929x1080 (FullHD)*/
-	-fx-background-insets: -15 -15 -30 -15, 0, 0, 0, -3 -3 -3 -3, 0, 0, 0;
+	/*-fx-background-insets: -15 -15 -30 -15, 0, 0, 0, -3 -3 -3 -3, 0, 0, 0;*/
 	
 	-fx-background-color: #24262e, #000000, #ffffff, #ffffff, #0093ff, #000000, #000000, #ffffff;
 	-fx-opacity: 1.0;
 	/*-fx-padding: 0.166667em;*/
+}
+#otherAppsButtons{
+	/* this is a little cheat, to be able to return to the apps, during the build-phase where there is no
+	 * content on the Tabs of the Tabpane underneath the app-bar. */
+	-fx-opacity: 0.0;
 }
 .pane{
 	-fx-padding: 0;
@@ -39,10 +44,10 @@
 	-fx-text-fill: #e8e8e8;
 	
 	/*enable the following line for screens with a resolution of 1280x720*/
-	/*-fx-font-size: 30pt;*/
+	-fx-font-size: 30pt;
 	
 	/*enable the following line for screens with a resolution of 1920x1080*/
-	-fx-font-size: 45pt;
+	/*-fx-font-size: 45pt;*/
 }
 #numberPadButton{
 	-fx-font-size: 10pt;

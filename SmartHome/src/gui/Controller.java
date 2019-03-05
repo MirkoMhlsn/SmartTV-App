@@ -12,6 +12,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import apps.AllOtherApps;
 import apps.Stoppuhr;
 import apps.Windows;
 import javafx.animation.KeyFrame;
@@ -84,8 +85,11 @@ public class Controller implements Initializable {
 	private Clip clip;
 	int soundLoop = 0;
 	
+	int focusCounter = 0;
+	
 	Stoppuhr timer;
 	Windows windows;
+	AllOtherApps allOtherApps;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -174,6 +178,33 @@ public class Controller implements Initializable {
 			initTabContent(i);
 			
 		}
+		
+		tabPane.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				
+				if(newValue && focusCounter == 1) {
+					
+					focusCounter = 0;
+					
+					closeTabs(currentTab);
+					soundLoop = 0;
+					tab[currentTab].setDisable(true);
+					scrollPane.setDisable(false);
+					grow();
+					kacheln.get(currentTab).requestFocus();
+					
+				}
+				else if(newValue) {
+					
+					focusCounter++;
+					
+				}
+				
+			}
+			
+		});
 		
 	}
 	
@@ -285,26 +316,6 @@ public class Controller implements Initializable {
 	
 	private void startTabPane(int index) {
 		
-		tabPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			
-			@Override
-			public void handle(KeyEvent event) {
-				
-				if(event.getCode() == KeyCode.UP) {
-					
-					closeTabs(index);
-					soundLoop = 0;
-					tab[index].setDisable(true);
-					scrollPane.setDisable(false);
-					grow();
-					kacheln.get(index).requestFocus();
-					
-				}
-				
-			}
-			
-		});
-		
 		if(index == 7) {
 			
 			windows.startWindows();
@@ -315,6 +326,13 @@ public class Controller implements Initializable {
 			timer.setUpTimer();
 			
 		}
+		else{
+			
+			allOtherApps.start(index);
+			
+		}
+		
+		//switch (index): case(0) -> start YT etc...
 		
 	}
 	
@@ -328,6 +346,11 @@ public class Controller implements Initializable {
 		else if(index == 9) {
 			
 			timer.stopTimer();
+			
+		}
+		else{
+			
+			allOtherApps.close(index);
 			
 		}
 		
@@ -428,10 +451,19 @@ public class Controller implements Initializable {
 	private void initTabContent(int index) {
 		
 		if(index == 7) {
+			
 			windows = new Windows(tab[index]);
+			
 		}
 		else if(index == 9) {
+			
 			timer = new Stoppuhr(tab[index]);
+			
+		}
+		else{
+			
+			allOtherApps = new AllOtherApps(index, tab[index]);
+			
 		}
 		
 	}

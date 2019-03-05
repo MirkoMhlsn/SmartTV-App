@@ -81,7 +81,7 @@ public class Worker {
 		screenResolution[0] = visualBounds.getHeight();
 		screenResolution[1] = visualBounds.getWidth();
 		
-		System.out.println(screenResolution[0]);
+		System.out.println("detected resolution: " + (int)screenResolution[0] + "p");
 		
 	}
 	

@@ -1,8 +1,5 @@
 package apps;
 
-import java.awt.AWTException;
-import java.awt.Robot;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -61,12 +58,6 @@ public class Windows {
 				if(event.getCode() == KeyCode.UP) {
 					
 					tab.getTabPane().requestFocus();
-					try {
-						Robot robot = new Robot();
-						robot.keyPress(java.awt.event.KeyEvent.VK_UP);
-					} catch (AWTException e) {
-						e.printStackTrace();
-					}
 					
 				}
 				
