@@ -15,6 +15,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import apps.AllOtherApps;
 import apps.Stoppuhr;
 import apps.Windows;
+import apps.YouTube;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -37,7 +38,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -49,13 +49,10 @@ import worker.Worker;
 public class Controller implements Initializable {
 	
 	@FXML
-	AnchorPane anchorPane;
-	
-	@FXML
 	ScrollPane scrollContent;
 	
 	@FXML
-	VBox vBox;
+	VBox vContentBox;
 	
 	@FXML
 	HBox metadaten;
@@ -75,18 +72,33 @@ public class Controller implements Initializable {
 	Label appName;
 	Region spacerL;
 	Region spacerR;
-	ArrayList<Button> kacheln = new ArrayList<Button>();
+	
 	Worker arbeiter = new Worker();
+	ArrayList<Button> kacheln = new ArrayList<Button>();
 	Tab tab[] = new Tab[arbeiter.kachelAnzahl];
+	
 	int currentTab = 0;
 	double prevKacheln[] = {0, 0};
 	double dif = 0;
 	double token = 1;
 	private Clip clip;
 	int soundLoop = 0;
-	
 	int focusCounter = 0;
 	
+	double smallTabPaneHeight;
+	double bigTabPaneHeight;
+	
+	double smallPaneFillHeight;
+	double bigPaneFillHeight;
+	
+	double scrollPaneHeight;
+	
+	double hBoxWidth;
+	double hBoxPadding;
+	
+	double metadatenHeight;
+	
+	YouTube youTube;
 	Stoppuhr timer;
 	Windows windows;
 	AllOtherApps allOtherApps;
@@ -101,6 +113,7 @@ public class Controller implements Initializable {
 	
 	private void initAppLayout() {
 		
+		initDimensionValues();
 		initScrollBar();
 		initMetaPane();
 		initTabPane();
@@ -114,31 +127,49 @@ public class Controller implements Initializable {
 		
 	}
 	
-	public void initScrollBar() {
+	private void initDimensionValues() {
+		
+		bigTabPaneHeight = 11.0/18.0 * arbeiter.getScreenHeight();
+		smallTabPaneHeight = 4.0/9.0 * arbeiter.getScreenHeight();
+		
+		bigPaneFillHeight = 1.0/6.0 * arbeiter.getScreenHeight();
+		smallPaneFillHeight = 0;
+		
+		scrollPaneHeight = arbeiter.kachelDimension*4.0/15.0 + arbeiter.kachelDimension;
+		
+		hBoxWidth = (arbeiter.kachelDimension*2.0/15.0 + arbeiter.kachelDimension) * arbeiter.kachelAnzahl;
+		
+		metadatenHeight = 1.0/8.0 * arbeiter.getScreenHeight();
+		
+	}
+	
+	private void initScrollBar() {
 		
 		scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
+		scrollPane.setId("scrollPaneApps");
 		
 		scrollContent.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scrollContent.setVbarPolicy(ScrollBarPolicy.NEVER);
+		scrollContent.setId("scrollPaneApps");
 		
-		scrollContent.prefHeightProperty().bind(anchorPane.heightProperty());
-		scrollContent.prefWidthProperty().bind(anchorPane.widthProperty());
+		scrollContent.setPrefHeight(arbeiter.getScreenHeight());
+		scrollContent.setPrefWidth(arbeiter.getScreenWidth());
 		
 		kacheln = arbeiter.kachelGen(arbeiter.kachelAnzahl);
 		ObservableList<Button> apps = FXCollections.observableList(kacheln);
 		
-		vBox.prefWidthProperty().bind(scrollContent.widthProperty());
+		vContentBox.prefWidthProperty().bind(scrollContent.widthProperty());
 
-		double inset[] = getScreenDependentInsets();
-		vBox.setPadding(new Insets(inset[1], inset[0], inset[1], inset[0]));
+		double inset[] = arbeiter.getVContentBoxInsets();
+		vContentBox.setPadding(new Insets(inset[1], inset[0], inset[1], inset[0]));
 		
-		scrollPane.prefHeightProperty().bind(vBox.heightProperty());
-		scrollPane.prefWidthProperty().bind(vBox.widthProperty());
-		scrollPane.setMaxHeight(arbeiter.kachelDimension*4.0/15.0 + arbeiter.kachelDimension);
+		scrollPane.prefHeightProperty().bind(vContentBox.heightProperty());
+		scrollPane.prefWidthProperty().bind(vContentBox.widthProperty());
+		scrollPane.setMaxHeight(scrollPaneHeight);
 		
 		hBox.prefHeightProperty().bind(scrollPane.heightProperty());
-		hBox.setPrefWidth((arbeiter.kachelDimension*2.0/15.0 + arbeiter.kachelDimension) * arbeiter.kachelAnzahl);
+		hBox.setPrefWidth(hBoxWidth);
 		hBox.getChildren().addAll(apps);
 		hBox.setPadding(new Insets(arbeiter.hBoxInset, arbeiter.hBoxInset / 2.0, arbeiter.hBoxInset, arbeiter.hBoxInset / 2.0));
 		hBox.setSpacing(arbeiter.hBoxInset);
@@ -148,26 +179,28 @@ public class Controller implements Initializable {
 	
 	private void initMetaPane(){
 		
-		metadaten.prefWidthProperty().bind(vBox.widthProperty());
-		metadaten.setPrefHeight(1.0/8.0 * arbeiter.screenResolution[0]);
+		metadaten.prefWidthProperty().bind(vContentBox.widthProperty());
+		metadaten.setPrefHeight(metadatenHeight);
 		
 		appName = new Label();
+		appName.setId("appName");
+		
 		spacerL = new Region();
 		spacerR = new Region();
 		HBox.setHgrow(spacerL, Priority.ALWAYS);
 		HBox.setHgrow(spacerR, Priority.ALWAYS);
 		metadaten.getChildren().addAll(spacerL, appName, spacerR);
 		
-		paneFill.prefWidthProperty().bind(vBox.widthProperty());
-		paneFill.setPrefHeight(1.0/6.0 * arbeiter.screenResolution[0]);
+		paneFill.prefWidthProperty().bind(vContentBox.widthProperty());
+		paneFill.setPrefHeight(bigPaneFillHeight);
 		
 	}
 	
 	public void initTabPane() {
 		
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-		tabPane.setPrefHeight(arbeiter.screenResolution[0] * 4.0/9.0);
-		tabPane.prefWidthProperty().bind(vBox.widthProperty());
+		tabPane.setPrefHeight(smallTabPaneHeight);
+		tabPane.prefWidthProperty().bind(vContentBox.widthProperty());
 		
 		for(int i = 0; i < tab.length; i++) {
 			
@@ -214,16 +247,6 @@ public class Controller implements Initializable {
 		AudioInputStream inputStream = AudioSystem.getAudioInputStream(path);
 		clip = AudioSystem.getClip();
 		clip.open(inputStream);
-		
-	}
-	
-	private double[] getScreenDependentInsets() {
-		
-		double returnValues[] = new double[2];
-		returnValues[0] = (9.0 / 256.0 * arbeiter.screenResolution[1]);
-		returnValues[1] = (1.0 / 12.0 * arbeiter.screenResolution[0]);
-		
-		return returnValues;
 		
 	}
 	
@@ -316,7 +339,12 @@ public class Controller implements Initializable {
 	
 	private void startTabPane(int index) {
 		
-		if(index == 7) {
+		if(index == 0) {
+			
+			youTube.startYouTube();
+			
+		}
+		else if(index == 7) {
 			
 			windows.startWindows();
 			
@@ -338,7 +366,12 @@ public class Controller implements Initializable {
 	
 	private void closeTabs(int index) {
 		
-		if(index == 7) {
+		if(index == 0) {
+			
+			youTube.stopYouTube();
+			
+		}
+		else if(index == 7) {
 			
 			windows.stopWindows();
 			
@@ -391,7 +424,7 @@ public class Controller implements Initializable {
 	private void smoothShrinkTabPane() {
 		
 		Timeline timeline = new Timeline();
-		KeyValue keyvalue = new KeyValue(tabPane.prefHeightProperty(), arbeiter.screenResolution[0] * 11.0/18.0);
+		KeyValue keyvalue = new KeyValue(tabPane.prefHeightProperty(), bigTabPaneHeight);
 		KeyFrame keyframe = new KeyFrame(new Duration(200), keyvalue);
 		timeline.getKeyFrames().add(keyframe);
 		timeline.play();
@@ -401,7 +434,7 @@ public class Controller implements Initializable {
 	private void smoothGrowTabPane() {
 		
 		Timeline timeline = new Timeline();
-		KeyValue keyvalue = new KeyValue(tabPane.prefHeightProperty(), arbeiter.screenResolution[0] * 4.0/9.0);
+		KeyValue keyvalue = new KeyValue(tabPane.prefHeightProperty(), smallTabPaneHeight);
 		KeyFrame keyframe = new KeyFrame(new Duration(200), keyvalue);
 		timeline.getKeyFrames().add(keyframe);
 		timeline.play();
@@ -431,7 +464,7 @@ public class Controller implements Initializable {
 	private void smoothShrinkPaneFill() {
 		
 		Timeline timeline = new Timeline();
-		KeyValue keyvalue = new KeyValue(paneFill.prefHeightProperty(), 0.0);
+		KeyValue keyvalue = new KeyValue(paneFill.prefHeightProperty(), smallPaneFillHeight);
 		KeyFrame keyframe = new KeyFrame(new Duration(200), keyvalue);
 		timeline.getKeyFrames().add(keyframe);
 		timeline.play();
@@ -441,7 +474,7 @@ public class Controller implements Initializable {
 	private void smoothGrowPaneFill() {
 		
 		Timeline timeline = new Timeline();
-		KeyValue keyvalue = new KeyValue(paneFill.prefHeightProperty(), arbeiter.screenResolution[0] * 1.0/6.0);
+		KeyValue keyvalue = new KeyValue(paneFill.prefHeightProperty(), bigPaneFillHeight);
 		KeyFrame keyframe = new KeyFrame(new Duration(200), keyvalue);
 		timeline.getKeyFrames().add(keyframe);
 		timeline.play();
@@ -450,7 +483,12 @@ public class Controller implements Initializable {
 	
 	private void initTabContent(int index) {
 		
-		if(index == 7) {
+		if(index == 0) {
+			
+			youTube = new YouTube(tab[index], bigTabPaneHeight);
+			
+		}
+		else if(index == 7) {
 			
 			windows = new Windows(tab[index]);
 			

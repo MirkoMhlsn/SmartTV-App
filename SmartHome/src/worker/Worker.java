@@ -116,5 +116,27 @@ public class Worker {
 		bufferedReader.close();
 		
 	}
+	
+	public double getScreenHeight() {
+		
+		return screenResolution[0];
+		
+	}
+	
+	public double getScreenWidth() {
+		
+		return screenResolution[1];
+		
+	}
+	
+	public double[] getVContentBoxInsets() {
+		
+		double returnValues[] = new double[2];
+		returnValues[0] = (9.0 / 256.0 * screenResolution[1]);
+		returnValues[1] = (1.0 / 12.0 * screenResolution[0]);
+		
+		return returnValues;
+		
+	}
 
 }
